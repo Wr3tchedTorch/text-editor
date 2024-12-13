@@ -1,4 +1,3 @@
-// *ADD: a scroll functionality to display the lines below the window;
 // *ADD: Add variables to track cursor position (cursorX and cursorY);
 // *ADD: Draw a visual cursor using sf::RectangleShape;
 // *ADD: Capture arrow key inputs to move the cursor horizontally and vertically;
@@ -45,13 +44,13 @@ int main()
 
     CameraManager camera(sf::Vector2f(1080u, 720u), sf::FloatRect(0, 0, 1080u, 720u));
 
-    TextEditor textEditor(text);    
+    TextEditor textEditor(text);
 
     sf::Font monacoFont;
     monacoFont.loadFromFile("./fonts/Monaco.ttf");
 
     const float LINE_HEIGHT = 50.0f;
-    const float TEXT_SCALE = 1.0f;
+    const unsigned int CHAR_SIZE = 30u;
 
     textEditor.SetLineHeight(LINE_HEIGHT);
 
@@ -65,8 +64,16 @@ int main()
                 window.close();
                 break;
             case sf::Event::MouseWheelMoved:
+            {
                 int direction = event.mouseWheel.delta * -1;
                 camera.Scroll(direction);
+                break;
+            }
+            case sf::Event::KeyPressed:
+                if (event.key.scancode == sf::Keyboard::Scancode::Right)
+                    textEditor.MoveCursor(1, 0);
+                else if (event.key.scancode == sf::Keyboard::Scancode::Left)
+                    textEditor.MoveCursor(-1, 0);
                 break;
             }
         }
@@ -76,7 +83,7 @@ int main()
         camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
         camera.Render(window);
 
-        textEditor.Draw(window, monacoFont, TEXT_SCALE, sf::Color::White);
+        textEditor.Draw(window, monacoFont, CHAR_SIZE, sf::Color::White);
 
         window.display();
     }
