@@ -13,7 +13,7 @@ private:
     std::vector<std::string> text;
 
     sf::Vector2i currentCursorPosition;
-    sf::RectangleShape cursorHighlightShape;    
+    sf::RectangleShape cursorHighlightShape;
 
     sf::Font fontFamily;
     float lineHeight;
@@ -23,9 +23,9 @@ private:
 public:
     TextEditor(std::vector<std::string> text);
     void Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor);
-    
+
     float GetTextHeight();
-    float GetLineWidth();
+    float GetLineWidth(int lineIndex);
 
     void MoveCursor(sf::Vector2i offset);
     void MoveCursor(float xOffset, float yOffset);

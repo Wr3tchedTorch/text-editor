@@ -43,14 +43,22 @@ float TextEditor::GetTextHeight()
     return text.size() * GetLineHeight();
 }
 
+float TextEditor::GetLineWidth(int lineIndex)
+{
+    return text.at(lineIndex).size();
+}
+
 void TextEditor::MoveCursor(sf::Vector2i offset)
 {
     sf::Vector2i toCursorPosition = currentCursorPosition;
 
-    // ! ADD: limit offset within the max grid length and height as well
     toCursorPosition += offset;
     if (toCursorPosition.x < 0 || toCursorPosition.y < 0)
         return;
+
+    int lineWidth = GetLineWidth(toCursorPosition.y);
+    if (toCursorPosition.x >= lineWidth)
+        toCursorPosition.x = lineWidth - 1;
 
     currentCursorPosition = toCursorPosition;
 }
