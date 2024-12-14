@@ -1,3 +1,4 @@
+// !FIX: refactor TextEditor code;
 // *ADD: Add variables to track cursor position (cursorX and cursorY);
 // *ADD: Draw a visual cursor using sf::RectangleShape;
 // *ADD: Capture arrow key inputs to move the cursor horizontally and vertically;
@@ -11,6 +12,11 @@
 #include <vector>
 #include "TextEditor.h"
 #include "CameraManager.h"
+
+const sf::Color BG_COLOR = sf::Color(27.0f, 24.0f, 51.0f, 1.0f);
+const sf::Color CURSOR_COLOR = sf::Color(242.0f, 159.0f, 88.0f, 120.0f);
+
+void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode);
 
 std::vector<std::string> text = {
     "import java.util.HashMap;",
@@ -44,7 +50,7 @@ int main()
 
     CameraManager camera(sf::Vector2f(1080u, 720u), sf::FloatRect(0, 0, 1080u, 720u));
 
-    TextEditor textEditor(text);
+    TextEditor textEditor(text, CURSOR_COLOR);
 
     sf::Font monacoFont;
     monacoFont.loadFromFile("./fonts/Monaco.ttf");
@@ -70,25 +76,61 @@ int main()
                 break;
             }
             case sf::Event::KeyPressed:
-                if (event.key.scancode == sf::Keyboard::Scancode::Right)
-                    textEditor.MoveCursor(1, 0);
-                else if (event.key.scancode == sf::Keyboard::Scancode::Left)
-                    textEditor.MoveCursor(-1, 0);
-                else if (event.key.scancode == sf::Keyboard::Scancode::Down)
-                    textEditor.MoveCursor(0, 1);
-                else if (event.key.scancode == sf::Keyboard::Scancode::Up)
-                    textEditor.MoveCursor(0, -1);
+                HandleKeyboardInput(textEditor, event.key.code);
                 break;
             }
+
+            window.clear(BG_COLOR);
+
+            camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
+            camera.Render(window);
+
+            textEditor.Draw(window, monacoFont, CHAR_SIZE, sf::Color::White);
+
+            window.display();
         }
+    }
+}
 
-        window.clear();
+void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
+{
+    switch (keyCode)
+    {
+    case sf::Keyboard::Key::Right:
+        textEditor.MoveCursor(1, 0);
+        break;
+    case sf::Keyboard::Key::Left:
+        textEditor.MoveCursor(-1, 0);
+        break;
+    case sf::Keyboard::Key::Down:
+        textEditor.MoveCursor(0, 1);
+        break;
+    case sf::Keyboard::Key::Up:
+        textEditor.MoveCursor(0, -1);
+        break;
+    case sf::Keyboard::Key::End:
+        std::cout << "\nend";
+        textEditor.MoveCursor(999, 0);
+        break;
+    case sf::Keyboard::Key::Home:
+        std::cout << "\nhome";
+        textEditor.MoveCursor(-999, 0);
+        break;
+    default:
+        break;
+    }
 
-        camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
-        camera.Render(window);
-
-        textEditor.Draw(window, monacoFont, CHAR_SIZE, sf::Color::White);
-
-        window.display();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+    {
+        if (keyCode == sf::Keyboard::Key::End)
+        {
+            std::cout << "\nctrl + " << " end";
+            textEditor.MoveCursor(0, 999);
+        }
+        else if (keyCode == sf::Keyboard::Key::Home)
+        {
+            std::cout << "\nctrl + " << " home";
+            textEditor.MoveCursor(0, -999);
+        }
     }
 }

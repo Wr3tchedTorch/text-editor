@@ -3,13 +3,11 @@
 
 //? Public
 
-TextEditor::TextEditor(std::vector<std::string> text)
+TextEditor::TextEditor(std::vector<std::string> text, sf::Color cursorColor)
 {
     SetText(text);
 
     currentCursorPosition = {0, 0};
-
-    sf::Color cursorColor(255.0f, 255.0f, 255.0f, 125.0f);
     cursorHighlightShape.setFillColor(cursorColor);
 }
 
@@ -61,8 +59,11 @@ void TextEditor::MoveCursor(sf::Vector2i offset)
     sf::Vector2i toCursorPosition = currentCursorPosition;
 
     toCursorPosition += offset;
-    if (toCursorPosition.x < 0 || toCursorPosition.y < 0)
-        return;
+    if (toCursorPosition.x < 0)
+        toCursorPosition.x = 0;
+        
+    if (toCursorPosition.y < 0)
+        toCursorPosition.y = 0;
 
     int totalNumOfLines = GetTotalNumberOfLines() - 1;
     if (toCursorPosition.y >= totalNumOfLines)
@@ -93,7 +94,7 @@ void TextEditor::CalculateCellsWidth()
         for (char character : line)
         {
             float kerning = fontFamily.getKerning(previousChar, character, charSize);
-            widthList.insert(widthList.end(), cachedWidth);            
+            widthList.insert(widthList.end(), cachedWidth);
             cachedWidth += GetCharWidth(character) + kerning;
 
             previousChar = character;
