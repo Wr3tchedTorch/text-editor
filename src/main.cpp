@@ -15,10 +15,10 @@
 std::vector<std::string> text = {
     "import java.util.HashMap;",
     "import java.util.Map;",
-    "",
+    " ",
     "public class Fibonacci {",
     "    private static Map<Integer, Integer> memo = new HashMap<>();",
-    "",
+    " ",
     "    public static int fibonacci(int n) {",
     "        if (n <= 1)",
     "            return n;",
@@ -28,7 +28,7 @@ std::vector<std::string> text = {
     "        memo.put(n, result);",
     "        return result;",
     "    }",
-    "",
+    " ",
     "    public static void main(String[] args) {",
     "        int n = 10;",
     "        for (int i = 0; i < n; i++) {",
@@ -74,6 +74,10 @@ int main()
                     textEditor.MoveCursor(1, 0);
                 else if (event.key.scancode == sf::Keyboard::Scancode::Left)
                     textEditor.MoveCursor(-1, 0);
+                else if (event.key.scancode == sf::Keyboard::Scancode::Down)
+                    textEditor.MoveCursor(0, 1);
+                else if (event.key.scancode == sf::Keyboard::Scancode::Up)
+                    textEditor.MoveCursor(0, -1);
                 break;
             }
         }

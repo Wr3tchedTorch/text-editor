@@ -8,7 +8,9 @@ TextEditor::TextEditor(std::vector<std::string> text)
     SetText(text);
 
     currentCursorPosition = {0, 0};
-    cursorHighlightShape.setFillColor(sf::Color::White);
+
+    sf::Color cursorColor(255.0f, 255.0f, 255.0f, 125.0f);
+    cursorHighlightShape.setFillColor(cursorColor);
 }
 
 void TextEditor::Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned int fontScale, sf::Color fontColor)
@@ -19,11 +21,12 @@ void TextEditor::Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned in
     textToDraw.setColor(fontColor);
 
     int lineCounter = 1;
-    sf::Vector2f textPosition = {EDITOR_OFFSET, EDITOR_OFFSET};
+    sf::Vector2f textPosition = {EDITOR_X_OFFSET, EDITOR_Y_OFFSET};
     for (auto line : text)
     {
-        textToDraw.setString(std::to_string(lineCounter++) + "  " + line);
-        textToDraw.setPosition(textPosition);
+        std::string lineHeader = std::to_string(lineCounter++) + "  ";
+        textToDraw.setString(lineHeader + line);
+        textToDraw.setPosition(sf::Vector2f(textPosition.x - GetCharsWidth(lineHeader), textPosition.y));
         window.draw(textToDraw);
 
         textPosition.y += GetLineHeight();
@@ -32,7 +35,7 @@ void TextEditor::Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned in
     if (!hasBeenDraw)
         CalculateCellsWidth();
 
-    cursorHighlightShape.setSize(sf::Vector2f(GetCharWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x)), charSize));
+    cursorHighlightShape.setSize(sf::Vector2f(GetCharWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x)), charSize + CURSOR_Y_PADDING));
     cursorHighlightShape.setPosition(GetPositionFromGridCoordinates(currentCursorPosition));
     window.draw(cursorHighlightShape);
     hasBeenDraw = true;
@@ -48,6 +51,11 @@ float TextEditor::GetLineWidth(int lineIndex)
     return text.at(lineIndex).size();
 }
 
+int TextEditor::GetTotalNumberOfLines()
+{
+    return text.size();
+}
+
 void TextEditor::MoveCursor(sf::Vector2i offset)
 {
     sf::Vector2i toCursorPosition = currentCursorPosition;
@@ -56,9 +64,13 @@ void TextEditor::MoveCursor(sf::Vector2i offset)
     if (toCursorPosition.x < 0 || toCursorPosition.y < 0)
         return;
 
-    int lineWidth = GetLineWidth(toCursorPosition.y);
+    int totalNumOfLines = GetTotalNumberOfLines() - 1;
+    if (toCursorPosition.y >= totalNumOfLines)
+        toCursorPosition.y = totalNumOfLines;
+
+    int lineWidth = GetLineWidth(toCursorPosition.y) - 1;
     if (toCursorPosition.x >= lineWidth)
-        toCursorPosition.x = lineWidth - 1;
+        toCursorPosition.x = lineWidth;
 
     currentCursorPosition = toCursorPosition;
 }
@@ -76,12 +88,15 @@ void TextEditor::CalculateCellsWidth()
     for (std::string line : text)
     {
         std::vector<float> widthList;
+        char previousChar = '\0';
         float cachedWidth = 0;
         for (char character : line)
         {
-            float charWidth = GetCharWidth(character);
-            widthList.insert(widthList.end(), charWidth + cachedWidth);
-            cachedWidth += charWidth;
+            float kerning = fontFamily.getKerning(previousChar, character, charSize);
+            widthList.insert(widthList.end(), cachedWidth);            
+            cachedWidth += GetCharWidth(character) + kerning;
+
+            previousChar = character;
             j++;
         }
         cellCoordinateWidth.insert(cellCoordinateWidth.end(), widthList);
@@ -119,11 +134,11 @@ float TextEditor::GetLineHeight()
 
 sf::Vector2f TextEditor::GetPositionFromGridCoordinates(sf::Vector2i coordinates)
 {
-    sf::Vector2f position;
-    position.y = coordinates.y * lineHeight + EDITOR_OFFSET;
 
-    float totalXoffset = GetCharsWidth("00") + EDITOR_OFFSET;
-    position.x = cellCoordinateWidth.at(coordinates.y).at(coordinates.x) + totalXoffset;
+    sf::Vector2f position;
+    position.y = coordinates.y * lineHeight + EDITOR_Y_OFFSET - CURSOR_Y_PADDING / 2;
+
+    position.x = cellCoordinateWidth.at(coordinates.y).at(coordinates.x) + EDITOR_X_OFFSET;
     return position;
 }
 

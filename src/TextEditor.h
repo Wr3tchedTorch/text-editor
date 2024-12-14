@@ -7,18 +7,21 @@
 class TextEditor
 {
 private:
-    const float EDITOR_OFFSET = 20.0f;
+    const float EDITOR_X_OFFSET = 70.0f;
+    const float EDITOR_Y_OFFSET = 20.0f;
 
-    std::vector<std::vector<float>> cellCoordinateWidth;
+    const float CURSOR_Y_PADDING = 20.0f;
+
     std::vector<std::string> text;
+    std::vector<std::vector<float>> cellCoordinateWidth;
 
     sf::Vector2i currentCursorPosition;
     sf::RectangleShape cursorHighlightShape;
 
     sf::Font fontFamily;
-    float lineHeight;
     unsigned int charSize = 30;
-    bool hasBeenDraw = false;
+    bool hasBeenDraw = false;    
+    float lineHeight;
 
 public:
     TextEditor(std::vector<std::string> text);
@@ -26,6 +29,7 @@ public:
 
     float GetTextHeight();
     float GetLineWidth(int lineIndex);
+    int GetTotalNumberOfLines();
 
     void MoveCursor(sf::Vector2i offset);
     void MoveCursor(float xOffset, float yOffset);
