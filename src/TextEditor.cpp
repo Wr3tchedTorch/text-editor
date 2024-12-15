@@ -7,7 +7,6 @@ TextEditor::TextEditor(std::vector<std::string> text, sf::Color cursorColor)
 {
     SetText(text);
 
-    currentCursorPosition = {0, 0};
     cursorHighlightShape.setFillColor(cursorColor);
 }
 
@@ -15,28 +14,9 @@ void TextEditor::Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned in
 {
     this->fontFamily = fontFamily;
 
-    sf::Text textToDraw("", fontFamily, charSize);
-    textToDraw.setColor(fontColor);
+    DrawText(window, fontFamily, fontScale, fontColor);
 
-    int lineCounter = 1;
-    sf::Vector2f textPosition = {EDITOR_X_OFFSET, EDITOR_Y_OFFSET};
-    for (auto line : text)
-    {
-        std::string lineHeader = std::to_string(lineCounter++) + "  ";
-        textToDraw.setString(lineHeader + line);
-        textToDraw.setPosition(sf::Vector2f(textPosition.x - GetCharsWidth(lineHeader), textPosition.y));
-        window.draw(textToDraw);
-
-        textPosition.y += GetLineHeight();
-    }
-
-    if (!hasBeenDraw)
-        CalculateCellsWidth();
-
-    cursorHighlightShape.setSize(sf::Vector2f(GetCharWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x)), charSize + CURSOR_Y_PADDING));
-    cursorHighlightShape.setPosition(GetPositionFromGridCoordinates(currentCursorPosition));
-    window.draw(cursorHighlightShape);
-    hasBeenDraw = true;
+    DrawCursor(window);
 }
 
 float TextEditor::GetTextHeight()
@@ -57,59 +37,43 @@ int TextEditor::GetTotalNumberOfLines()
 void TextEditor::MoveCursor(sf::Vector2i offset)
 {
     sf::Vector2i toCursorPosition = currentCursorPosition;
-
     toCursorPosition += offset;
-    if (toCursorPosition.x < 0)
-        toCursorPosition.x = 0;
-        
-    if (toCursorPosition.y < 0)
-        toCursorPosition.y = 0;
 
-    int totalNumOfLines = GetTotalNumberOfLines() - 1;
-    if (toCursorPosition.y >= totalNumOfLines)
-        toCursorPosition.y = totalNumOfLines;
-
-    int lineWidth = GetLineWidth(toCursorPosition.y) - 1;
-    if (toCursorPosition.x >= lineWidth)
-        toCursorPosition.x = lineWidth;
+    ClampPosition(toCursorPosition);
 
     currentCursorPosition = toCursorPosition;
-}
-
-void TextEditor::MoveCursor(float xOffset, float yOffset)
-{
-    MoveCursor(sf::Vector2i(xOffset, yOffset));
 }
 
 void TextEditor::CalculateCellsWidth()
 {
     cellCoordinateWidth.clear();
 
-    int i = 0, j = 0;
-    for (std::string line : text)
+    for (size_t y = 0; y < GetTotalNumberOfLines(); y++)
     {
         std::vector<float> widthList;
-        char previousChar = '\0';
-        float cachedWidth = 0;
-        for (char character : line)
-        {
-            float kerning = fontFamily.getKerning(previousChar, character, charSize);
-            widthList.insert(widthList.end(), cachedWidth);
-            cachedWidth += GetCharWidth(character) + kerning;
 
-            previousChar = character;
-            j++;
+        float cachedWidth = 0;
+        char previousChar = '\0';
+        for (size_t x = 0; x < GetLineWidth(y); x++)
+        {
+            char currentChar = text.at(y).at(x);
+            float kerning = fontFamily.getKerning(previousChar, currentChar, charSize);
+            cachedWidth += GetCharFontWidth(currentChar) + kerning;
+
+            widthList.insert(widthList.end(), cachedWidth);
+            previousChar = currentChar;
         }
         cellCoordinateWidth.insert(cellCoordinateWidth.end(), widthList);
-        i++;
     }
 }
 
 void TextEditor::SetText(std::vector<std::string> toValue)
 {
     text = toValue;
-    if (hasBeenDraw)
+    if (!isFirstTimeBeingDraw)
+    {
         CalculateCellsWidth();
+    }
 }
 
 std::vector<std::string> TextEditor::GetText()
@@ -133,27 +97,84 @@ float TextEditor::GetLineHeight()
 
 //? Private
 
+void TextEditor::DrawText(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor)
+{
+    sf::Text textToDraw("", fontFamily, charSize);
+    textToDraw.setFillColor(fontColor);
+
+    sf::Vector2f textPosition = {EDITOR_X_OFFSET, EDITOR_Y_OFFSET};
+    for (size_t i = 0; i < GetTotalNumberOfLines(); i++)
+    {
+        std::string lineNumberIndicator = std::to_string(i + 1) + "  ";
+        sf::Vector2f linePosition = {textPosition.x - GetCharSequenceTotalFontWidth(lineNumberIndicator), textPosition.y};
+
+        textToDraw.setString(lineNumberIndicator + text.at(i));
+        textToDraw.setPosition(linePosition);
+        window.draw(textToDraw);
+
+        textPosition.y += GetLineHeight();
+    }
+}
+
+void TextEditor::DrawCursor(sf::RenderWindow &window)
+{
+    if (isFirstTimeBeingDraw)
+    {
+        CalculateCellsWidth();
+        isFirstTimeBeingDraw = false;
+    }
+
+    sf::Vector2f cursorPosition = GetPositionFromGridCoordinates(currentCursorPosition);
+    float cursorWidth = GetCharFontWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x));
+    float cursorHeight = charSize + CURSOR_Y_PADDING;
+
+    cursorHighlightShape.setSize({cursorWidth, cursorHeight});
+    cursorHighlightShape.setPosition(cursorPosition);
+    window.draw(cursorHighlightShape);
+}
+
 sf::Vector2f TextEditor::GetPositionFromGridCoordinates(sf::Vector2i coordinates)
 {
-
     sf::Vector2f position;
     position.y = coordinates.y * lineHeight + EDITOR_Y_OFFSET - CURSOR_Y_PADDING / 2;
-
     position.x = cellCoordinateWidth.at(coordinates.y).at(coordinates.x) + EDITOR_X_OFFSET;
     return position;
 }
 
-float TextEditor::GetCharWidth(char character)
+float TextEditor::GetCharFontWidth(char character)
 {
     return fontFamily.getGlyph(character, charSize, false).advance;
 }
 
-float TextEditor::GetCharsWidth(std::string charSequence)
+float TextEditor::GetCharSequenceTotalFontWidth(std::string charSequence)
 {
     float total = 0;
     for (char c : charSequence)
     {
-        total += fontFamily.getGlyph(c, charSize, false).advance;
+        total += GetCharFontWidth(c);
     }
     return total;
+}
+
+sf::Vector2i TextEditor::ClampPosition(sf::Vector2i &position)
+{
+    int totalNumOfLines = GetTotalNumberOfLines() - 1;
+    if (position.y < 0)
+    {
+        position.y = 0;
+    }
+    else if (position.y > totalNumOfLines)
+    {
+        position.y = totalNumOfLines;
+    }
+
+    int lineWidth = GetLineWidth(position.y) - 1;
+    if (position.x < 0)
+    {
+        position.x = 0;
+    }
+    else if (position.x > lineWidth)
+    {
+        position.x = lineWidth;
+    }
 }

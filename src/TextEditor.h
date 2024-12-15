@@ -15,13 +15,13 @@ private:
     std::vector<std::string> text;
     std::vector<std::vector<float>> cellCoordinateWidth;
 
-    sf::Vector2i currentCursorPosition;
+    sf::Vector2i currentCursorPosition = {0, 0};
     sf::RectangleShape cursorHighlightShape;
+    bool isFirstTimeBeingDraw = true;
 
     sf::Font fontFamily;
-    unsigned int charSize = 30;
-    bool hasBeenDraw = false;    
     float lineHeight;
+    unsigned int charSize = 30;
 
 public:
     TextEditor(std::vector<std::string> text, sf::Color cursorColor);
@@ -32,8 +32,6 @@ public:
     int GetTotalNumberOfLines();
 
     void MoveCursor(sf::Vector2i offset);
-    void MoveCursor(float xOffset, float yOffset);
-
     void CalculateCellsWidth();
 
     void SetText(std::vector<std::string> toValue);
@@ -43,7 +41,12 @@ public:
     float GetLineHeight();
 
 private:
+    void DrawText(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor);
+    void DrawCursor(sf::RenderWindow &window);
+
     sf::Vector2f GetPositionFromGridCoordinates(sf::Vector2i coordinates);
-    float GetCharWidth(char character);
-    float GetCharsWidth(std::string charSequence);
+    float GetCharFontWidth(char character);
+    float GetCharSequenceTotalFontWidth(std::string charSequence);
+
+    sf::Vector2i ClampPosition(sf::Vector2i & position);
 };

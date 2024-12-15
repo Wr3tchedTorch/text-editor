@@ -1,4 +1,5 @@
-// !FIX: refactor TextEditor code;
+// !FIX: create `App` class to store application related functions, such as keyboard processing functions;
+
 // *ADD: Add variables to track cursor position (cursorX and cursorY);
 // *ADD: Draw a visual cursor using sf::RectangleShape;
 // *ADD: Capture arrow key inputs to move the cursor horizontally and vertically;
@@ -13,10 +14,15 @@
 #include "TextEditor.h"
 #include "CameraManager.h"
 
-const sf::Color BG_COLOR = sf::Color(27.0f, 24.0f, 51.0f, 1.0f);
-const sf::Color CURSOR_COLOR = sf::Color(242.0f, 159.0f, 88.0f, 120.0f);
-
 void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode);
+void HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode);
+
+const sf::Vector2f WINDOW_RESOLUTION = {1080u, 720u};
+const std::string WINDOW_TITLE = "Eric Code";
+
+const sf::Color CURSOR_COLOR = sf::Color(242.0f, 159.0f, 88.0f, 120.0f);
+const sf::Color BG_COLOR = sf::Color(27.0f, 24.0f, 51.0f);
+const sf::Color FONT_COLOR = sf::Color(255.0f, 240.0f, 220.0f);
 
 std::vector<std::string> text = {
     "import java.util.HashMap;",
@@ -45,20 +51,19 @@ std::vector<std::string> text = {
 
 int main()
 {
-    sf::RenderWindow window({1080u, 720u}, "Text Editor");
-    window.setFramerateLimit(144);
-
-    CameraManager camera(sf::Vector2f(1080u, 720u), sf::FloatRect(0, 0, 1080u, 720u));
-
-    TextEditor textEditor(text, CURSOR_COLOR);
-
-    sf::Font monacoFont;
-    monacoFont.loadFromFile("./fonts/Monaco.ttf");
-
     const float LINE_HEIGHT = 50.0f;
     const unsigned int CHAR_SIZE = 30u;
 
+    sf::RenderWindow window(sf::VideoMode(WINDOW_RESOLUTION.x, WINDOW_RESOLUTION.y), WINDOW_TITLE);
+    window.setFramerateLimit(144);
+
+    CameraManager camera(WINDOW_RESOLUTION, sf::FloatRect({0, 0}, WINDOW_RESOLUTION));
+
+    TextEditor textEditor(text, CURSOR_COLOR);
     textEditor.SetLineHeight(LINE_HEIGHT);
+
+    sf::Font monacoFont;
+    monacoFont.loadFromFile("./fonts/Monaco.ttf");
 
     while (window.isOpen())
     {
@@ -85,7 +90,7 @@ int main()
             camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
             camera.Render(window);
 
-            textEditor.Draw(window, monacoFont, CHAR_SIZE, sf::Color::White);
+            textEditor.Draw(window, monacoFont, CHAR_SIZE, FONT_COLOR);
 
             window.display();
         }
@@ -97,40 +102,45 @@ void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
     switch (keyCode)
     {
     case sf::Keyboard::Key::Right:
-        textEditor.MoveCursor(1, 0);
+        textEditor.MoveCursor({1, 0});
         break;
     case sf::Keyboard::Key::Left:
-        textEditor.MoveCursor(-1, 0);
+        textEditor.MoveCursor({-1, 0});
         break;
     case sf::Keyboard::Key::Down:
-        textEditor.MoveCursor(0, 1);
+        textEditor.MoveCursor({0, 1});
         break;
     case sf::Keyboard::Key::Up:
-        textEditor.MoveCursor(0, -1);
+        textEditor.MoveCursor({0, -1});
         break;
     case sf::Keyboard::Key::End:
         std::cout << "\nend";
-        textEditor.MoveCursor(999, 0);
+        textEditor.MoveCursor({999, 0});
         break;
     case sf::Keyboard::Key::Home:
         std::cout << "\nhome";
-        textEditor.MoveCursor(-999, 0);
+        textEditor.MoveCursor({-999, 0});
         break;
     default:
         break;
     }
 
+    HandleKeyCombinations(textEditor, keyCode);
+}
+
+void HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode)
+{
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
     {
         if (keyCode == sf::Keyboard::Key::End)
         {
             std::cout << "\nctrl + " << " end";
-            textEditor.MoveCursor(0, 999);
+            textEditor.MoveCursor({0, 999});
         }
         else if (keyCode == sf::Keyboard::Key::Home)
         {
             std::cout << "\nctrl + " << " home";
-            textEditor.MoveCursor(0, -999);
+            textEditor.MoveCursor({0, -999});
         }
     }
 }

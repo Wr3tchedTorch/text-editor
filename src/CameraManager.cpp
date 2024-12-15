@@ -12,14 +12,15 @@ CameraManager::CameraManager(sf::Vector2f resolution, sf::FloatRect limits)
 
 void CameraManager::Scroll(int direction)
 {
+    sf::Vector2f toPosition = camera.getCenter() - camera.getSize() / 2.0f;
+    
     float movementIncrement = scrollSpeed * direction;
-
-    sf::Vector2f newPosition = camera.getCenter() - camera.getSize() / 2.0f;
-    newPosition.y += movementIncrement;
-    if (!IsPositionValid(newPosition))
-        return;
-
-    camera.move(0, movementIncrement);
+    toPosition.y += movementIncrement;
+    
+    if (IsPositionValid(toPosition))
+    {
+        camera.move(0, movementIncrement);
+    }
 }
 
 void CameraManager::Render(sf::RenderWindow &window)
