@@ -12,7 +12,9 @@ private:
 
 public:
     CameraManager(sf::Vector2f resolution, sf::FloatRect limits);
+    CameraManager(sf::Vector2f resolution);
 
+    void Move(sf::Vector2f offset);
     void Scroll(int direction);
     void Render(sf::RenderWindow &window);
 

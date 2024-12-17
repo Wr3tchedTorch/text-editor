@@ -1,11 +1,7 @@
 // !FIX: create `App` class to store application related functions, such as keyboard processing functions;
 
-// *ADD: Add variables to track cursor position (cursorX and cursorY);
-// *ADD: Draw a visual cursor using sf::RectangleShape;
-// *ADD: Capture arrow key inputs to move the cursor horizontally and vertically;
-// *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
-// *ADD: Clamp cursor movement to prevent moving out of bounds;
 // *ADD: Scroll the viewport down when the cursor moves out of the visible area;
+// *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
 
 #include <SFML/Graphics.hpp>
@@ -16,6 +12,7 @@
 
 void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode);
 void HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode);
+void SetEditorText(std::vector<std::string> toText, TextEditor &textEditor, CameraManager &cameraManager);
 
 const sf::Vector2f WINDOW_RESOLUTION = {1080u, 720u};
 const std::string WINDOW_TITLE = "Eric Code";
@@ -57,13 +54,15 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WINDOW_RESOLUTION.x, WINDOW_RESOLUTION.y), WINDOW_TITLE);
     window.setFramerateLimit(144);
 
-    CameraManager camera(WINDOW_RESOLUTION, sf::FloatRect({0, 0}, WINDOW_RESOLUTION));
-
-    TextEditor textEditor(text, CURSOR_COLOR);
-    textEditor.SetLineHeight(LINE_HEIGHT);
-
     sf::Font monacoFont;
     monacoFont.loadFromFile("./fonts/Monaco.ttf");
+
+    TextEditor textEditor(CURSOR_COLOR, monacoFont);
+    textEditor.SetLineHeight(LINE_HEIGHT);
+
+    CameraManager camera(WINDOW_RESOLUTION);
+
+    SetEditorText(text, textEditor, camera);
 
     while (window.isOpen())
     {
@@ -90,7 +89,7 @@ int main()
             camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
             camera.Render(window);
 
-            textEditor.Draw(window, monacoFont, CHAR_SIZE, FONT_COLOR);
+            textEditor.Draw(window, CHAR_SIZE, FONT_COLOR);
 
             window.display();
         }
@@ -143,4 +142,12 @@ void HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode)
             textEditor.MoveCursor({0, -999});
         }
     }
+}
+
+void SetEditorText(std::vector<std::string> toText, TextEditor &textEditor, CameraManager &cameraManager)
+{
+    textEditor.SetText(toText);
+
+    std::cout << "\nText height: " << textEditor.GetTextHeight() << " | Text width: " << textEditor.GetTextWidth();
+    cameraManager.SetLimits(sf::FloatRect({0, 0}, {textEditor.GetTextWidth(), textEditor.GetTextHeight()}));
 }

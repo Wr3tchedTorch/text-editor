@@ -3,14 +3,21 @@
 
 //? Public
 
-TextEditor::TextEditor(std::vector<std::string> text, sf::Color cursorColor)
+TextEditor::TextEditor(std::vector<std::string> text, sf::Font fontFamily, sf::Color cursorColor)
 {
+    this->fontFamily = fontFamily;
     SetText(text);
 
     cursorHighlightShape.setFillColor(cursorColor);
 }
 
-void TextEditor::Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned int fontScale, sf::Color fontColor)
+TextEditor::TextEditor(sf::Color cursorColor, sf::Font fontFamily)
+{
+    this->fontFamily = fontFamily;
+    cursorHighlightShape.setFillColor(cursorColor);
+}
+
+void TextEditor::Draw(sf::RenderWindow &window, unsigned int fontScale, sf::Color fontColor)
 {
     this->fontFamily = fontFamily;
 
@@ -24,7 +31,22 @@ float TextEditor::GetTextHeight()
     return text.size() * GetLineHeight();
 }
 
-float TextEditor::GetLineWidth(int lineIndex)
+float TextEditor::GetTextWidth()
+{
+    float highestSize = 0.0f;
+    for (const std::string line : text)
+    {        
+        float lineSize = GetCharSequenceTotalFontWidth(line);
+        std::cout << "\n" << line << " | width: " << lineSize;
+        if (lineSize > highestSize)
+        {
+            highestSize = lineSize;
+        }
+    }
+    return highestSize;
+}
+
+float TextEditor::GetLineSize(int lineIndex)
 {
     return text.at(lineIndex).size();
 }
@@ -54,7 +76,7 @@ void TextEditor::CalculateCellsWidth()
 
         float cachedWidth = 0;
         char previousChar = '\0';
-        for (size_t x = 0; x < GetLineWidth(y); x++)
+        for (size_t x = 0; x < GetLineSize(y); x++)
         {
             char currentChar = text.at(y).at(x);
             float kerning = fontFamily.getKerning(previousChar, currentChar, charSize);
@@ -168,7 +190,7 @@ sf::Vector2i TextEditor::ClampPosition(sf::Vector2i &position)
         position.y = totalNumOfLines;
     }
 
-    int lineWidth = GetLineWidth(position.y) - 1;
+    int lineWidth = GetLineSize(position.y) - 1;
     if (position.x < 0)
     {
         position.x = 0;

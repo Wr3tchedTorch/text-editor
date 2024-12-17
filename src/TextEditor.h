@@ -24,11 +24,14 @@ private:
     unsigned int charSize = 30;
 
 public:
-    TextEditor(std::vector<std::string> text, sf::Color cursorColor);
-    void Draw(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor);
+    TextEditor(std::vector<std::string> text, sf::Font fontFamily, sf::Color cursorColor);
+    TextEditor(sf::Color cursorColor, sf::Font fontFamily);
+    void Draw(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
 
     float GetTextHeight();
-    float GetLineWidth(int lineIndex);
+    float GetTextWidth();
+
+    float GetLineSize(int lineIndex);
     int GetTotalNumberOfLines();
 
     void MoveCursor(sf::Vector2i offset);

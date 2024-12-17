@@ -10,17 +10,28 @@ CameraManager::CameraManager(sf::Vector2f resolution, sf::FloatRect limits)
     camera.reset(sf::FloatRect({0, 0}, resolution));
 }
 
+CameraManager::CameraManager(sf::Vector2f resolution)
+{
+    camera.reset(sf::FloatRect({0, 0}, resolution));
+}
+
+void CameraManager::Move(sf::Vector2f offset)
+{
+    sf::Vector2f cameraBottomPosition = camera.getCenter() + camera.getSize() / 2.0f;
+    sf::Vector2f cameraTopPosition = camera.getCenter() - camera.getSize() / 2.0f;
+    cameraBottomPosition += offset;
+    cameraTopPosition += offset;
+
+    if (IsPositionValid(cameraBottomPosition) && IsPositionValid(cameraTopPosition))
+    {
+        camera.move(offset);
+    }
+}
+
 void CameraManager::Scroll(int direction)
 {
-    sf::Vector2f toPosition = camera.getCenter() - camera.getSize() / 2.0f;
-    
     float movementIncrement = scrollSpeed * direction;
-    toPosition.y += movementIncrement;
-    
-    if (IsPositionValid(toPosition))
-    {
-        camera.move(0, movementIncrement);
-    }
+    Move({0, movementIncrement});
 }
 
 void CameraManager::Render(sf::RenderWindow &window)
