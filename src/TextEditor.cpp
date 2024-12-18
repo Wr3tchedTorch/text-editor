@@ -37,7 +37,6 @@ float TextEditor::GetTextWidth()
     for (const std::string line : text)
     {        
         float lineSize = GetCharSequenceTotalFontWidth(line);
-        std::cout << "\n" << line << " | width: " << lineSize;
         if (lineSize > highestSize)
         {
             highestSize = lineSize;

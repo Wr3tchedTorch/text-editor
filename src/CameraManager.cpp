@@ -17,12 +17,11 @@ CameraManager::CameraManager(sf::Vector2f resolution)
 
 void CameraManager::Move(sf::Vector2f offset)
 {
-    sf::Vector2f cameraBottomPosition = camera.getCenter() + camera.getSize() / 2.0f;
-    sf::Vector2f cameraTopPosition = camera.getCenter() - camera.getSize() / 2.0f;
-    cameraBottomPosition += offset;
-    cameraTopPosition += offset;
+    sf::Vector2f bottomPosition = GetBottomPosition() + offset;
+    bottomPosition.y -= BOTTOM_PADDING;
 
-    if (IsPositionValid(cameraBottomPosition) && IsPositionValid(cameraTopPosition))
+    if (IsPositionValid(bottomPosition) &&
+        IsPositionValid(GetTopPosition() + offset))
     {
         camera.move(offset);
     }

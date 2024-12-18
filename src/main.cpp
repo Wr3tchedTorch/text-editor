@@ -9,10 +9,7 @@
 #include <vector>
 #include "TextEditor.h"
 #include "CameraManager.h"
-
-void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode);
-void HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode);
-void SetEditorText(std::vector<std::string> toText, TextEditor &textEditor, CameraManager &cameraManager);
+#include "App.h"
 
 const sf::Vector2f WINDOW_RESOLUTION = {1080u, 720u};
 const std::string WINDOW_TITLE = "Eric Code";
@@ -62,7 +59,7 @@ int main()
 
     CameraManager camera(WINDOW_RESOLUTION);
 
-    SetEditorText(text, textEditor, camera);
+    App::SetEditorText(text, textEditor, camera);
 
     while (window.isOpen())
     {
@@ -80,7 +77,7 @@ int main()
                 break;
             }
             case sf::Event::KeyPressed:
-                HandleKeyboardInput(textEditor, event.key.code);
+                App::HandleKeyboardInput(textEditor, event.key.code);
                 break;
             }
 
@@ -94,60 +91,4 @@ int main()
             window.display();
         }
     }
-}
-
-void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
-{
-    switch (keyCode)
-    {
-    case sf::Keyboard::Key::Right:
-        textEditor.MoveCursor({1, 0});
-        break;
-    case sf::Keyboard::Key::Left:
-        textEditor.MoveCursor({-1, 0});
-        break;
-    case sf::Keyboard::Key::Down:
-        textEditor.MoveCursor({0, 1});
-        break;
-    case sf::Keyboard::Key::Up:
-        textEditor.MoveCursor({0, -1});
-        break;
-    case sf::Keyboard::Key::End:
-        std::cout << "\nend";
-        textEditor.MoveCursor({999, 0});
-        break;
-    case sf::Keyboard::Key::Home:
-        std::cout << "\nhome";
-        textEditor.MoveCursor({-999, 0});
-        break;
-    default:
-        break;
-    }
-
-    HandleKeyCombinations(textEditor, keyCode);
-}
-
-void HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode)
-{
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-    {
-        if (keyCode == sf::Keyboard::Key::End)
-        {
-            std::cout << "\nctrl + " << " end";
-            textEditor.MoveCursor({0, 999});
-        }
-        else if (keyCode == sf::Keyboard::Key::Home)
-        {
-            std::cout << "\nctrl + " << " home";
-            textEditor.MoveCursor({0, -999});
-        }
-    }
-}
-
-void SetEditorText(std::vector<std::string> toText, TextEditor &textEditor, CameraManager &cameraManager)
-{
-    textEditor.SetText(toText);
-
-    std::cout << "\nText height: " << textEditor.GetTextHeight() << " | Text width: " << textEditor.GetTextWidth();
-    cameraManager.SetLimits(sf::FloatRect({0, 0}, {textEditor.GetTextWidth(), textEditor.GetTextHeight()}));
 }

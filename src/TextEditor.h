@@ -21,7 +21,7 @@ private:
 
     sf::Font fontFamily;
     float lineHeight;
-    unsigned int charSize = 30;
+    unsigned int charSize = 30;    
 
 public:
     TextEditor(std::vector<std::string> text, sf::Font fontFamily, sf::Color cursorColor);
@@ -43,7 +43,7 @@ public:
     void SetLineHeight(float toValue);
     float GetLineHeight();
 
-private:
+private:    
     void DrawText(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor);
     void DrawCursor(sf::RenderWindow &window);
 

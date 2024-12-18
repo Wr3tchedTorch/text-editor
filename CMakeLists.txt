@@ -17,6 +17,7 @@ add_executable(main
 src/main.cpp
 src/TextEditor.cpp
 src/CameraManager.cpp
+src/App.cpp
 )
 target_link_libraries(main PRIVATE sfml-graphics)
 target_compile_features(main PRIVATE cxx_std_17)
