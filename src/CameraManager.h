@@ -3,16 +3,7 @@
 
 class CameraManager
 {
-private:
-    const float BOTTOM_PADDING = 100.0f;
-
-    sf::View camera;
-    sf::FloatRect limits;
-
-    float movementSpeed = 50;
-    float scrollSpeed = 50;
-
-
+public:
     sf::Vector2f GetBottomPosition() const
     {
         return camera.getCenter() + camera.getSize() / 2.0f;
@@ -22,6 +13,15 @@ private:
     {
         return camera.getCenter() - camera.getSize() / 2.0f;
     }
+
+private:
+    const float BOTTOM_PADDING = 100.0f;
+
+    sf::View camera;
+    sf::FloatRect limits;
+
+    float movementSpeed = 50;
+    float scrollSpeed = 50;
 
 public:
     CameraManager(sf::Vector2f resolution, sf::FloatRect limits);

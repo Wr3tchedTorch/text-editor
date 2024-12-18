@@ -35,7 +35,7 @@ float TextEditor::GetTextWidth()
 {
     float highestSize = 0.0f;
     for (const std::string line : text)
-    {        
+    {
         float lineSize = GetCharSequenceTotalFontWidth(line);
         if (lineSize > highestSize)
         {
@@ -53,6 +53,16 @@ float TextEditor::GetLineSize(int lineIndex)
 int TextEditor::GetTotalNumberOfLines()
 {
     return text.size();
+}
+
+sf::Vector2f TextEditor::GetCursorPosition()
+{
+    return GetPositionFromGridCoordinates(currentCursorPosition);
+}
+
+sf::Vector2i TextEditor::GetCursorGridCoordinate()
+{
+    return currentCursorPosition;
 }
 
 void TextEditor::MoveCursor(sf::Vector2i offset)

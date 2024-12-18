@@ -28,14 +28,17 @@ public:
     TextEditor(sf::Color cursorColor, sf::Font fontFamily);
     void Draw(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
 
+    void MoveCursor(sf::Vector2i offset);
+    void CalculateCellsWidth();
+
     float GetTextHeight();
     float GetTextWidth();
 
     float GetLineSize(int lineIndex);
     int GetTotalNumberOfLines();
 
-    void MoveCursor(sf::Vector2i offset);
-    void CalculateCellsWidth();
+    sf::Vector2f GetCursorPosition();
+    sf::Vector2i GetCursorGridCoordinate();
 
     void SetText(std::vector<std::string> toValue);
     std::vector<std::string> GetText();
