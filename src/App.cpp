@@ -23,33 +23,42 @@ void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
         textEditor.MoveCursor({0, -1});
         break;
     case sf::Keyboard::Key::End:
-        std::cout << "\nend";
         textEditor.MoveCursor({999, 0});
         break;
     case sf::Keyboard::Key::Home:
-        std::cout << "\nhome";
         textEditor.MoveCursor({-999, 0});
         break;
     default:
         break;
     }
-
-    App::HandleKeyCombinations(textEditor, keyCode);
 }
 
-void App::HandleKeyCombinations(TextEditor &textEditor, sf::Keyboard::Key keyCode)
+void App::HandleKeyCombinations(CameraManager &camera, TextEditor &textEditor, sf::Keyboard::Key keyCode)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
     {
         if (keyCode == sf::Keyboard::Key::End)
         {
-            std::cout << "\nctrl + " << " end";
             textEditor.MoveCursor({0, 999});
+            camera.Scroll(999);
         }
         else if (keyCode == sf::Keyboard::Key::Home)
         {
-            std::cout << "\nctrl + " << " home";
             textEditor.MoveCursor({0, -999});
+            camera.Scroll(-999);
         }
+    }
+}
+
+void App::CameraVerticalFollow(sf::Vector2f position, CameraManager &camera)
+{
+    const float BOTTOM_OFFSET = 150.0f;
+    if (position.y + BOTTOM_OFFSET > camera.GetBottomPosition())
+    {
+        camera.Scroll(1);
+    }
+    if (position.y < camera.GetTopPosition())
+    {
+        camera.Scroll(-1);
     }
 }

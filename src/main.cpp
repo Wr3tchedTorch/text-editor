@@ -1,6 +1,4 @@
-// !FIX: create `App` class to store application related functions, such as keyboard processing functions;
-
-// *ADD: Scroll camera all the way down or up when pressing ctrl + end or ctrl + home
+// *ADD: add horizontal clamping on camera
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
 
@@ -79,15 +77,9 @@ int main()
             case sf::Event::KeyPressed:
             {
                 App::HandleKeyboardInput(textEditor, event.key.code);
-                sf::Vector2f cursorPosition = textEditor.GetCursorPosition();
-                if (cursorPosition.y + 150 > camera.GetBottomPosition().y)
-                {
-                    camera.Scroll(1);
-                }
-                if (cursorPosition.y < camera.GetTopPosition().y)
-                {
-                    camera.Scroll(-1);
-                }
+                App::HandleKeyCombinations(camera, textEditor, event.key.code);
+
+                App::CameraVerticalFollow(textEditor.GetCursorPosition(), camera);
                 break;
             }
             }

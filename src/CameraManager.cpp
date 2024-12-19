@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "CameraManager.h"
 
@@ -17,14 +18,20 @@ CameraManager::CameraManager(sf::Vector2f resolution)
 
 void CameraManager::Move(sf::Vector2f offset)
 {
-    sf::Vector2f bottomPosition = GetBottomPosition() + offset;
-    bottomPosition.y -= BOTTOM_PADDING;
-
-    if (IsPositionValid(bottomPosition) &&
-        IsPositionValid(GetTopPosition() + offset))
+    sf::Vector2f newPosition = {0, 0};
+    if (offset.y > 0)
     {
-        camera.move(offset);
+        newPosition.y = GetBottomPosition() + offset.y;
+        newPosition.y -= BOTTOM_PADDING;
     }
+    else if (offset.y < 0)
+    {
+        newPosition.y = GetTopPosition() + offset.y;
+    }
+
+    camera.move(offset);
+
+    ClampCameraPosition();
 }
 
 void CameraManager::Scroll(int direction)
@@ -67,4 +74,16 @@ float CameraManager::GetScrollSpeed()
 bool CameraManager::IsPositionValid(sf::Vector2f position)
 {
     return limits.contains(position);
+}
+
+void CameraManager::ClampCameraPosition()
+{
+    if (GetBottomPosition() > limits.height + BOTTOM_PADDING)
+    {
+        camera.setCenter({camera.getSize().x / 2, limits.height - camera.getSize().y / 2 + BOTTOM_PADDING});
+    }
+    else if (GetTopPosition() < limits.getPosition().y)
+    {
+        camera.setCenter({camera.getSize().x / 2, camera.getSize().y / 2 + limits.getPosition().y});
+    }
 }

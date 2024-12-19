@@ -4,14 +4,14 @@
 class CameraManager
 {
 public:
-    sf::Vector2f GetBottomPosition() const
+    float GetBottomPosition() const
     {
-        return camera.getCenter() + camera.getSize() / 2.0f;
+        return camera.getCenter().y + camera.getSize().y / 2.0f;
     }
 
-    sf::Vector2f GetTopPosition() const
+    float GetTopPosition() const
     {
-        return camera.getCenter() - camera.getSize() / 2.0f;
+        return camera.getCenter().y - camera.getSize().y / 2.0f;
     }
 
 private:
@@ -42,4 +42,5 @@ public:
 
 private:
     bool IsPositionValid(sf::Vector2f position);
+    void ClampCameraPosition();
 };

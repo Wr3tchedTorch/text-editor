@@ -21,7 +21,7 @@ void TextEditor::Draw(sf::RenderWindow &window, unsigned int fontScale, sf::Colo
 {
     this->fontFamily = fontFamily;
 
-    DrawText(window, fontFamily, fontScale, fontColor);
+    DrawText(window, fontScale, fontColor);
 
     DrawCursor(window);
 }
@@ -101,10 +101,7 @@ void TextEditor::CalculateCellsWidth()
 void TextEditor::SetText(std::vector<std::string> toValue)
 {
     text = toValue;
-    if (!isFirstTimeBeingDraw)
-    {
-        CalculateCellsWidth();
-    }
+    CalculateCellsWidth();
 }
 
 std::vector<std::string> TextEditor::GetText()
@@ -128,7 +125,7 @@ float TextEditor::GetLineHeight()
 
 //? Private
 
-void TextEditor::DrawText(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor)
+void TextEditor::DrawText(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor)
 {
     sf::Text textToDraw("", fontFamily, charSize);
     textToDraw.setFillColor(fontColor);
@@ -149,12 +146,6 @@ void TextEditor::DrawText(sf::RenderWindow &window, sf::Font fontFamily, unsigne
 
 void TextEditor::DrawCursor(sf::RenderWindow &window)
 {
-    if (isFirstTimeBeingDraw)
-    {
-        CalculateCellsWidth();
-        isFirstTimeBeingDraw = false;
-    }
-
     sf::Vector2f cursorPosition = GetPositionFromGridCoordinates(currentCursorPosition);
     float cursorWidth = GetCharFontWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x));
     float cursorHeight = charSize + CURSOR_Y_PADDING;

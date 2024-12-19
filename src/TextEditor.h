@@ -17,7 +17,6 @@ private:
 
     sf::Vector2i currentCursorPosition = {0, 0};
     sf::RectangleShape cursorHighlightShape;
-    bool isFirstTimeBeingDraw = true;
 
     sf::Font fontFamily;
     float lineHeight;
@@ -47,7 +46,7 @@ public:
     float GetLineHeight();
 
 private:    
-    void DrawText(sf::RenderWindow &window, sf::Font fontFamily, unsigned int charSize, sf::Color fontColor);
+    void DrawText(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
     void DrawCursor(sf::RenderWindow &window);
 
     sf::Vector2f GetPositionFromGridCoordinates(sf::Vector2i coordinates);
