@@ -26,6 +26,24 @@ void TextEditor::Draw(sf::RenderWindow &window, unsigned int fontScale, sf::Colo
     DrawCursor(window);
 }
 
+void TextEditor::AddCharacterAtCursorPosition(char character)
+{
+    text.at(currentCursorPosition.y).insert(currentCursorPosition.x, std::string(1, character));
+    MoveCursor({1, 0});
+    CalculateCellsWidth();
+}
+
+void TextEditor::DeleteCharacterAtCursorPosition()
+{
+    // ! If this condition is true the whole line should be erased and merged with the line before;
+    if (currentCursorPosition.x == 0)
+        return;
+
+    text.at(currentCursorPosition.y).erase(currentCursorPosition.x - 1, 1);
+    MoveCursor({-1, 0});
+    CalculateCellsWidth();
+}
+
 float TextEditor::GetTextHeight()
 {
     return text.size() * GetLineHeight();
@@ -89,9 +107,8 @@ void TextEditor::CalculateCellsWidth()
         {
             char currentChar = text.at(y).at(x);
             float kerning = fontFamily.getKerning(previousChar, currentChar, charSize);
-            cachedWidth += GetCharFontWidth(currentChar) + kerning;
-
             widthList.insert(widthList.end(), cachedWidth);
+            cachedWidth += GetCharFontWidth(currentChar) + kerning;
             previousChar = currentChar;
         }
         cellCoordinateWidth.insert(cellCoordinateWidth.end(), widthList);
@@ -100,6 +117,10 @@ void TextEditor::CalculateCellsWidth()
 
 void TextEditor::SetText(std::vector<std::string> toValue)
 {
+    for (std::string & line : toValue)
+    {
+        line.push_back(' ');
+    }
     text = toValue;
     CalculateCellsWidth();
 }

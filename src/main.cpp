@@ -1,3 +1,8 @@
+// *ADD: use SFML native input system instead of reading the keycode
+
+// *ADD: if the user hits backspace on the cursor position (x: 0, y: any) then delete the line at that position
+// * and merge with the line before (if there's any)
+
 // *ADD: add horizontal clamping on camera
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;

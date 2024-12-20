@@ -27,6 +27,9 @@ public:
     TextEditor(sf::Color cursorColor, sf::Font fontFamily);
     void Draw(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
 
+    void AddCharacterAtCursorPosition(char character);
+    void DeleteCharacterAtCursorPosition();
+
     void MoveCursor(sf::Vector2i offset);
     void CalculateCellsWidth();
 
