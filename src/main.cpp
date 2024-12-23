@@ -1,5 +1,3 @@
-// *ADD: use SFML native input system instead of reading the keycode
-
 // *ADD: if the user hits backspace on the cursor position (x: 0, y: any) then delete the line at that position
 // * and merge with the line before (if there's any)
 
@@ -87,6 +85,9 @@ int main()
                 App::CameraVerticalFollow(textEditor.GetCursorPosition(), camera);
                 break;
             }
+            case sf::Event::TextEntered:
+                if (event.text.unicode >= 32 && event.text.unicode <= 126)
+                    textEditor.AddCharacterAtCursorPosition(static_cast<char>(event.text.unicode));
             }
 
             window.clear(BG_COLOR);

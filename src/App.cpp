@@ -28,24 +28,9 @@ void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
     case sf::Keyboard::Key::Home:
         textEditor.MoveCursor({-999, 0});
         break;
-    default:
+    case sf::Keyboard::BackSpace:
     {
-        if (keyCode >= sf::Keyboard::A && keyCode <= sf::Keyboard::Z)
-        {
-            char character = static_cast<char>(keyCode - sf::Keyboard::A + 'a');
-            textEditor.AddCharacterAtCursorPosition(character);
-            break;
-        }
-        if (keyCode == sf::Keyboard::Space)
-        {
-            textEditor.AddCharacterAtCursorPosition(' ');
-            break;
-        }
-        if (keyCode == sf::Keyboard::BackSpace)
-        {
-            textEditor.DeleteCharacterAtCursorPosition();
-            break;
-        }
+        textEditor.DeleteCharacterAtCursorPosition();
     }
     }
 }
