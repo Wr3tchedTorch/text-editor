@@ -33,15 +33,49 @@ void TextEditor::AddCharacterAtCursorPosition(char character)
     CalculateCellsWidth();
 }
 
+void TextEditor::CreateNewLineAtCursorPosition()
+{
+    std::string previousLine = text.at(currentCursorPosition.y);
+    std::string line1 = previousLine.substr(0, currentCursorPosition.x) + " ";
+    std::string line2 = previousLine.substr(currentCursorPosition.x);
+
+    currentCursorPosition.x = 0;
+
+    text.at(currentCursorPosition.y) = line1;
+    text.insert(text.begin() + currentCursorPosition.y + 1, line2);
+
+    CalculateCellsWidth();
+
+    currentCursorPosition.y++;
+}
+
 void TextEditor::DeleteCharacterAtCursorPosition()
 {
     // ! If this condition is true the whole line should be erased and merged with the line before;
     if (currentCursorPosition.x == 0)
+    {
+        DeleteLineAtCursorPosition();
         return;
+    }
 
     text.at(currentCursorPosition.y).erase(currentCursorPosition.x - 1, 1);
     MoveCursor({-1, 0});
     CalculateCellsWidth();
+}
+
+void TextEditor::DeleteLineAtCursorPosition()
+{
+    if (currentCursorPosition.y == 0)
+        return;
+
+    sf::Vector2i newCursorPosition = {text.at(currentCursorPosition.y - 1).size(), currentCursorPosition.y - 1};
+    std::string currentLineContent = text.at(currentCursorPosition.y);
+
+    text.at(newCursorPosition.y) += currentLineContent;
+    text.erase(text.begin() + currentCursorPosition.y);
+
+    CalculateCellsWidth();
+    currentCursorPosition = newCursorPosition;
 }
 
 float TextEditor::GetTextHeight()
@@ -117,7 +151,7 @@ void TextEditor::CalculateCellsWidth()
 
 void TextEditor::SetText(std::vector<std::string> toValue)
 {
-    for (std::string & line : toValue)
+    for (std::string &line : toValue)
     {
         line.push_back(' ');
     }

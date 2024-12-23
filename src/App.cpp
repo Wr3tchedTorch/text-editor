@@ -28,10 +28,12 @@ void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
     case sf::Keyboard::Key::Home:
         textEditor.MoveCursor({-999, 0});
         break;
-    case sf::Keyboard::BackSpace:
-    {
+    case sf::Keyboard::BackSpace:    
         textEditor.DeleteCharacterAtCursorPosition();
-    }
+        break;
+    case sf::Keyboard::Enter:
+        textEditor.CreateNewLineAtCursorPosition();
+        break;
     }
 }
 

@@ -1,6 +1,6 @@
-// *ADD: if the user hits backspace on the cursor position (x: 0, y: any) then delete the line at that position
-// * and merge with the line before (if there's any)
-
+// *ADD: create new line when enter is pressed
+// *ADD: make the cursor go to where the user clicks with the mouse.
+// !FIX: camera gets buggy when deleting lines
 // *ADD: add horizontal clamping on camera
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
@@ -18,6 +18,18 @@ const std::string WINDOW_TITLE = "Eric Code";
 const sf::Color CURSOR_COLOR = sf::Color(242.0f, 159.0f, 88.0f, 120.0f);
 const sf::Color BG_COLOR = sf::Color(27.0f, 24.0f, 51.0f);
 const sf::Color FONT_COLOR = sf::Color(255.0f, 240.0f, 220.0f);
+
+float clampValue(float value, float max, float min)
+{
+    if (value > max)
+    {
+        value = max;
+    }
+    if (value < min)
+    {
+        value = min;
+    }
+}
 
 std::vector<std::string> text = {
     "import java.util.HashMap;",

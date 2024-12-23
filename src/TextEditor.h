@@ -28,7 +28,10 @@ public:
     void Draw(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
 
     void AddCharacterAtCursorPosition(char character);
+    void CreateNewLineAtCursorPosition();
+
     void DeleteCharacterAtCursorPosition();
+    void DeleteLineAtCursorPosition();
 
     void MoveCursor(sf::Vector2i offset);
     void CalculateCellsWidth();
