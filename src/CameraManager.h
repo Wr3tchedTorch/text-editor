@@ -31,6 +31,8 @@ public:
     void Scroll(int direction);
     void Render(sf::RenderWindow &window);
 
+    sf::Vector2f GetSize();
+
     void SetLimits(sf::FloatRect toValue);
     sf::FloatRect GetLimits();
 

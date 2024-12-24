@@ -45,10 +45,22 @@ void CameraManager::Render(sf::RenderWindow &window)
     window.setView(camera);
 }
 
+sf::Vector2f CameraManager::GetSize()
+{
+    return camera.getSize();
+}
+
 //? Getters and Setters
 
 void CameraManager::SetLimits(sf::FloatRect toValue)
 {
+    float limitPadding = 10.0f;
+    float minYLimit = camera.getSize().y + limitPadding;
+
+    if (toValue.height < minYLimit)
+    {
+        toValue.height = minYLimit;
+    }
     limits = toValue;
 }
 

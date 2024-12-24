@@ -1,6 +1,5 @@
 // *ADD: create new line when enter is pressed
 // *ADD: make the cursor go to where the user clicks with the mouse.
-// !FIX: camera gets buggy when deleting lines
 // *ADD: add horizontal clamping on camera
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
