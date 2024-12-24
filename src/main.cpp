@@ -1,4 +1,3 @@
-// *ADD: create new line when enter is pressed
 // *ADD: make the cursor go to where the user clicks with the mouse.
 // *ADD: add horizontal clamping on camera
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
@@ -99,6 +98,11 @@ int main()
             case sf::Event::TextEntered:
                 if (event.text.unicode >= 32 && event.text.unicode <= 126)
                     textEditor.AddCharacterAtCursorPosition(static_cast<char>(event.text.unicode));
+            }
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+            {
+                textEditor.SetCursorPosition(sf::Mouse::getPosition(window));
             }
 
             window.clear(BG_COLOR);

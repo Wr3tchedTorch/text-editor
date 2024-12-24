@@ -51,7 +51,6 @@ void TextEditor::CreateNewLineAtCursorPosition()
 
 void TextEditor::DeleteCharacterAtCursorPosition()
 {
-    // ! If this condition is true the whole line should be erased and merged with the line before;
     if (currentCursorPosition.x == 0)
     {
         DeleteLineAtCursorPosition();
@@ -115,6 +114,19 @@ sf::Vector2f TextEditor::GetCursorPosition()
 sf::Vector2i TextEditor::GetCursorGridCoordinate()
 {
     return currentCursorPosition;
+}
+
+void TextEditor::SetCursorPosition(sf::Vector2i globalPosition)
+{
+    if (globalPosition.x < 0 || globalPosition.y < 0)
+        return;
+
+    sf::Vector2i toPosition = GetGridCoordinatesFromPosition(globalPosition);
+
+    if (toPosition.x < 0 || toPosition.y < 0)
+        return;
+
+    currentCursorPosition = toPosition;
 }
 
 void TextEditor::MoveCursor(sf::Vector2i offset)
@@ -216,6 +228,39 @@ sf::Vector2f TextEditor::GetPositionFromGridCoordinates(sf::Vector2i coordinates
     position.y = coordinates.y * lineHeight + EDITOR_Y_OFFSET - CURSOR_Y_PADDING / 2;
     position.x = cellCoordinateWidth.at(coordinates.y).at(coordinates.x) + EDITOR_X_OFFSET;
     return position;
+}
+
+sf::Vector2i TextEditor::GetGridCoordinatesFromPosition(sf::Vector2i position)
+{
+    int x = -1, y = -1;
+
+    for (size_t i = 0; i < text.size(); i++)
+    {
+        float sum;
+        sum = GetLineHeight() * i + GetLineHeight() + EDITOR_Y_OFFSET;
+
+        if (sum >= position.y)
+        {
+            y = i;
+            break;
+        }
+    }
+
+    for (size_t i = 0; i < text.at(y).size(); i++)
+    {
+        if (cellCoordinateWidth.at(y).at(i) + EDITOR_X_OFFSET >= position.x)
+        {
+            x = i;
+            if (x > 0)
+                x--;
+            break;
+        }
+    }
+    if (x == -1)
+    {
+        x = text.at(y).size() - 1;
+    }
+    return {x, y};
 }
 
 float TextEditor::GetCharFontWidth(char character)

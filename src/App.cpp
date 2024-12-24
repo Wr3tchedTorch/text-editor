@@ -33,7 +33,7 @@ void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
         break;
     case sf::Keyboard::Enter:
         textEditor.CreateNewLineAtCursorPosition();
-        break;
+        break;    
     }
 }
 

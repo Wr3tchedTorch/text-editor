@@ -33,6 +33,7 @@ public:
     void DeleteCharacterAtCursorPosition();
     void DeleteLineAtCursorPosition();
 
+    void SetCursorPosition(sf::Vector2i globalPosition);
     void MoveCursor(sf::Vector2i offset);
     void CalculateCellsWidth();
 
@@ -55,6 +56,7 @@ private:
     void DrawText(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
     void DrawCursor(sf::RenderWindow &window);
 
+    sf::Vector2i GetGridCoordinatesFromPosition(sf::Vector2i position);
     sf::Vector2f GetPositionFromGridCoordinates(sf::Vector2i coordinates);
     float GetCharFontWidth(char character);
     float GetCharSequenceTotalFontWidth(std::string charSequence);
