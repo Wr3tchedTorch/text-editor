@@ -165,6 +165,8 @@ void TextEditor::SetText(std::vector<std::string> toValue)
 {
     for (std::string &line : toValue)
     {
+        if (line == " ")
+            continue;
         line.push_back(' ');
     }
     text = toValue;

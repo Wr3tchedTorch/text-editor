@@ -28,12 +28,12 @@ void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
     case sf::Keyboard::Key::Home:
         textEditor.MoveCursor({-999, 0});
         break;
-    case sf::Keyboard::BackSpace:    
+    case sf::Keyboard::BackSpace:
         textEditor.DeleteCharacterAtCursorPosition();
         break;
     case sf::Keyboard::Enter:
         textEditor.CreateNewLineAtCursorPosition();
-        break;    
+        break;
     }
 }
 
@@ -43,20 +43,22 @@ void App::HandleKeyCombinations(CameraManager &camera, TextEditor &textEditor, s
     {
         if (keyCode == sf::Keyboard::Key::End)
         {
-            textEditor.MoveCursor({0, 999});
+            textEditor.MoveCursor({999, 999});
             camera.Scroll(999);
+            camera.Move({999, 0});
         }
         else if (keyCode == sf::Keyboard::Key::Home)
         {
-            textEditor.MoveCursor({0, -999});
+            textEditor.MoveCursor({-999, -999});
             camera.Scroll(-999);
+            camera.Move({-999, 0});
         }
     }
 }
 
-void App::CameraVerticalFollow(sf::Vector2f position, CameraManager &camera)
+void App::CameraFollow(sf::Vector2f position, CameraManager &camera)
 {
-    const float BOTTOM_OFFSET = 150.0f;
+    const float BOTTOM_OFFSET = 150.0f;    
     if (position.y + BOTTOM_OFFSET > camera.GetBottomPosition())
     {
         camera.Scroll(1);
@@ -64,5 +66,14 @@ void App::CameraVerticalFollow(sf::Vector2f position, CameraManager &camera)
     if (position.y < camera.GetTopPosition())
     {
         camera.Scroll(-1);
+    }    
+    
+    if (position.x > camera.GetRightPosition())
+    {
+        camera.Move({camera.GetMovementSpeed(), 0});
+    }
+    if (position.x < camera.GetLeftPosition())
+    {
+        camera.Move({-camera.GetMovementSpeed(), 0});
     }
 }

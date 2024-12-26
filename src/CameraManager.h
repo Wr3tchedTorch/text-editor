@@ -14,13 +14,23 @@ public:
         return camera.getCenter().y - camera.getSize().y / 2.0f;
     }
 
+    float GetLeftPosition() const
+    {
+        return camera.getCenter().x - camera.getSize().x / 2.0f;
+    }
+
+    float GetRightPosition() const
+    {
+        return camera.getCenter().x + camera.getSize().x / 2.0f;
+    }
+
 private:
     const float BOTTOM_PADDING = 100.0f;
 
     sf::View camera;
     sf::FloatRect limits;
 
-    float movementSpeed = 50;
+    float movementSpeed = 80;
     float scrollSpeed = 50;
 
 public:
@@ -36,10 +46,11 @@ public:
     void SetLimits(sf::FloatRect toValue);
     sf::FloatRect GetLimits();
 
+    void GetPosition();
+
     void SetScrollSpeed(float toSpeed);
     float GetScrollSpeed();
 
-    void SetMovementSpeed(float toSpeed);
     float GetMovementSpeed();
 
 private:

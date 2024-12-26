@@ -18,17 +18,6 @@ CameraManager::CameraManager(sf::Vector2f resolution)
 
 void CameraManager::Move(sf::Vector2f offset)
 {
-    sf::Vector2f newPosition = {0, 0};
-    if (offset.y > 0)
-    {
-        newPosition.y = GetBottomPosition() + offset.y;
-        newPosition.y -= BOTTOM_PADDING;
-    }
-    else if (offset.y < 0)
-    {
-        newPosition.y = GetTopPosition() + offset.y;
-    }
-
     camera.move(offset);
 
     ClampCameraPosition();
@@ -81,6 +70,11 @@ float CameraManager::GetScrollSpeed()
     return scrollSpeed;
 }
 
+float CameraManager::GetMovementSpeed()
+{
+    return movementSpeed;
+}
+
 //? Private
 
 bool CameraManager::IsPositionValid(sf::Vector2f position)
@@ -92,10 +86,19 @@ void CameraManager::ClampCameraPosition()
 {
     if (GetBottomPosition() > limits.height + BOTTOM_PADDING)
     {
-        camera.setCenter({camera.getSize().x / 2, limits.height - camera.getSize().y / 2 + BOTTOM_PADDING});
+        camera.setCenter({camera.getCenter().x, limits.height - camera.getSize().y / 2 + BOTTOM_PADDING});
     }
     else if (GetTopPosition() < limits.getPosition().y)
     {
-        camera.setCenter({camera.getSize().x / 2, camera.getSize().y / 2 + limits.getPosition().y});
+        camera.setCenter({camera.getCenter().x, camera.getSize().y / 2 + limits.getPosition().y});
     }
+
+    if (GetRightPosition() > limits.width)
+    {
+        camera.setCenter({limits.width - camera.getSize().x / 2, camera.getCenter().y});
+    }
+    else if (GetLeftPosition() < limits.getPosition().x)
+    {
+        camera.setCenter({limits.getPosition().x + camera.getSize().x / 2, camera.getCenter().y});
+    }    
 }

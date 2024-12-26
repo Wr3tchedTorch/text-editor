@@ -11,5 +11,5 @@ public:
     static void HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode);
     static void HandleKeyCombinations(CameraManager &camera, TextEditor &textEditor, sf::Keyboard::Key keyCode);
 
-    static void CameraVerticalFollow(sf::Vector2f position, CameraManager & camera);
+    static void CameraFollow(sf::Vector2f position, CameraManager & camera);
 };

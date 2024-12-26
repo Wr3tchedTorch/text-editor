@@ -1,5 +1,5 @@
-// *ADD: make the cursor go to where the user clicks with the mouse.
-// *ADD: add horizontal clamping on camera
+// !FIX: camera cursor following
+
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
 
@@ -92,7 +92,7 @@ int main()
                 App::HandleKeyboardInput(textEditor, event.key.code);
                 App::HandleKeyCombinations(camera, textEditor, event.key.code);
 
-                App::CameraVerticalFollow(textEditor.GetCursorPosition(), camera);
+                App::CameraFollow(textEditor.GetCursorPosition(), camera);
                 break;
             }
             case sf::Event::TextEntered:
@@ -102,7 +102,10 @@ int main()
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
-                textEditor.SetCursorPosition(sf::Mouse::getPosition(window));
+                sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+                mousePosition.x += camera.GetLeftPosition();
+                mousePosition.y += camera.GetTopPosition();
+                textEditor.SetCursorPosition(mousePosition);
             }
 
             window.clear(BG_COLOR);
