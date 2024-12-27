@@ -1,4 +1,8 @@
 // ?REFACTOR: CameraManager.cpp and App.cpp codes
+// ? continue the creation of the InputManager class using maps and KeyCombinations
+// ? create abstract Command class with an Execute() function for general command execution
+
+
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
 
