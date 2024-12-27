@@ -6,7 +6,7 @@ void App::SetEditorText(std::vector<std::string> toText, TextEditor &textEditor,
     cameraManager.SetLimits(sf::FloatRect({0, 0}, {textEditor.GetTextWidth(), textEditor.GetTextHeight()}));
 }
 
-void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
+void App::HandleKeyboardInput(CameraManager &camera, TextEditor &textEditor, sf::Keyboard::Key keyCode)
 {
     switch (keyCode)
     {
@@ -24,9 +24,11 @@ void App::HandleKeyboardInput(TextEditor &textEditor, sf::Keyboard::Key keyCode)
         break;
     case sf::Keyboard::Key::End:
         textEditor.MoveCursor({999, 0});
+        camera.CenterAtPosition(textEditor.GetCursorPosition());
         break;
     case sf::Keyboard::Key::Home:
         textEditor.MoveCursor({-999, 0});
+        camera.CenterAtPosition(textEditor.GetCursorPosition());
         break;
     case sf::Keyboard::BackSpace:
         textEditor.DeleteCharacterAtCursorPosition();
@@ -44,14 +46,12 @@ void App::HandleKeyCombinations(CameraManager &camera, TextEditor &textEditor, s
         if (keyCode == sf::Keyboard::Key::End)
         {
             textEditor.MoveCursor({999, 999});
-            camera.Scroll(999);
-            camera.Move({999, 0});
+            camera.CenterAtPosition(textEditor.GetCursorPosition());
         }
         else if (keyCode == sf::Keyboard::Key::Home)
         {
             textEditor.MoveCursor({-999, -999});
-            camera.Scroll(-999);
-            camera.Move({-999, 0});
+            camera.CenterAtPosition(textEditor.GetCursorPosition());
         }
     }
 }

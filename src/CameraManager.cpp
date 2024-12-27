@@ -58,6 +58,21 @@ sf::FloatRect CameraManager::GetLimits()
     return limits;
 }
 
+void CameraManager::CenterAtPosition(sf::Vector2f position)
+{
+    if (position.y > GetTopPosition() && position.y < GetBottomPosition())
+    {
+        position.y = camera.getCenter().y;
+    }
+    if (position.x > GetLeftPosition() && position.x < GetRightPosition())
+    {
+        position.x = camera.getCenter().x;
+    }
+    
+    camera.setCenter(position);
+    ClampCameraPosition();
+}
+
 void CameraManager::SetScrollSpeed(float toSpeed)
 {
     if (toSpeed < 0)
@@ -100,5 +115,5 @@ void CameraManager::ClampCameraPosition()
     else if (GetLeftPosition() < limits.getPosition().x)
     {
         camera.setCenter({limits.getPosition().x + camera.getSize().x / 2, camera.getCenter().y});
-    }    
+    }
 }

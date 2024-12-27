@@ -1,5 +1,4 @@
-// !FIX: camera cursor following
-
+// ?REFACTOR: CameraManager.cpp and App.cpp codes
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
 // *ADD: Implement cursor blinking effect using sf::Clock;
 
@@ -89,7 +88,7 @@ int main()
             }
             case sf::Event::KeyPressed:
             {
-                App::HandleKeyboardInput(textEditor, event.key.code);
+                App::HandleKeyboardInput(camera, textEditor, event.key.code);
                 App::HandleKeyCombinations(camera, textEditor, event.key.code);
 
                 App::CameraFollow(textEditor.GetCursorPosition(), camera);

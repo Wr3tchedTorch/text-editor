@@ -46,7 +46,7 @@ public:
     void SetLimits(sf::FloatRect toValue);
     sf::FloatRect GetLimits();
 
-    void GetPosition();
+    void CenterAtPosition(sf::Vector2f position);
 
     void SetScrollSpeed(float toSpeed);
     float GetScrollSpeed();
