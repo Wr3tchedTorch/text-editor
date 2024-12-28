@@ -41,7 +41,7 @@ void InputManager::ProcessKeyboardInput(sf::Keyboard::Key keyCode)
 
     bool isCtrlPressed  = sf::Keyboard::Key::LControl ||  sf::Keyboard::Key::RControl;
     bool isShiftPressed = sf::Keyboard::Key::LShift   ||  sf::Keyboard::Key::RShift;
-    bool isAltPressed = sf::Keyboard::Key::LAlt     ||  sf::Keyboard::Key::RAlt;
+    bool isAltPressed   = sf::Keyboard::Key::LAlt     ||  sf::Keyboard::Key::RAlt;
 
     KeyCombination finalCombination = 
     {
