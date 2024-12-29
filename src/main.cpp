@@ -11,6 +11,7 @@
 #include <vector>
 #include "TextEditor.h"
 #include "CameraManager.h"
+#include "./input/InputManager.h"
 #include "App.h"
 
 const sf::Vector2f WINDOW_RESOLUTION = {1080u, 720u};
@@ -73,6 +74,8 @@ int main()
 
     CameraManager camera(WINDOW_RESOLUTION);
 
+    InputManager inputManager(textEditor, camera);
+
     App::SetEditorText(text, textEditor, camera);
 
     while (window.isOpen())
@@ -92,8 +95,7 @@ int main()
             }
             case sf::Event::KeyPressed:
             {
-                App::HandleKeyboardInput(camera, textEditor, event.key.code);
-                App::HandleKeyCombinations(camera, textEditor, event.key.code);
+                inputManager.ProcessKeyboardInput(event.key.code);
 
                 App::CameraFollow(textEditor.GetCursorPosition(), camera);
                 break;

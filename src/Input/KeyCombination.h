@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <sstream>
 
 struct KeyCombination
 {
@@ -11,18 +12,31 @@ struct KeyCombination
     bool shift = false;
     bool alt   = false;
 
-    bool operator==(const KeyCombination &other)
+    bool operator==(const KeyCombination &other) const
     {
         return key   == other.key   &&
                ctrl  == other.ctrl  &&
                shift == other.shift &&
                alt   == other.alt;
     }
+
+    std::string toString() 
+    {
+        std::stringstream result;
+
+        if (ctrl)  result << "Ctrl + ";
+        if (shift) result << "Shift + ";
+        if (alt)   result << "Alt + ";        
+
+        result << key;
+
+        return result.str();
+    }
 };
 
 struct KeyCombinationHash
 {
-    std::size_t operator()(const KeyCombination &keyCombination)
+    std::size_t operator()(const KeyCombination &keyCombination) const
     {
         return std::hash<int>()(static_cast<int>(keyCombination.key)) ^
                (std::hash<bool>()(keyCombination.ctrl)  << 1)  ^

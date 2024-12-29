@@ -2,24 +2,27 @@
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
-#include "CameraManager.h"
-#include "TextEditor.h"
 #include "KeyCombination.h"
 #include "./commands/Command.h"
+#include "../CameraManager.h"
+#include "../TextEditor.h"
 
 class InputManager
 {
 private:
-    TextEditor    * textEditor;
-    CameraManager * cameraManager;
+    TextEditor    &textEditor;
+    CameraManager &cameraManager;
 
-    std::unordered_map<KeyCombination, Command *, KeyCombinationHash> keyBindings;
+    std::unordered_map<KeyCombination, Command*, KeyCombinationHash> keyBindings;
 
 public:
-    InputManager(TextEditor & textEditor, CameraManager & cameraManager);
+    InputManager(TextEditor &, CameraManager &);
     ~InputManager();
 
-    void BindKeyToCommand(sf::Keyboard::Key key, Command *command);
-    void BindKeyToCommand(KeyCombination keyCombination, Command *command);
-    void ProcessKeyboardInput(sf::Keyboard::Key keyCode);
+    void BindKeyToCommand(sf::Keyboard::Key, Command *);
+    void BindKeyToCommand(KeyCombination, Command *);
+    void ProcessKeyboardInput(sf::Keyboard::Key);
+
+private:
+    bool IsKeyValid(sf::Keyboard::Key);
 };
