@@ -16,6 +16,27 @@ CameraManager::CameraManager(sf::Vector2f resolution)
     camera.reset(sf::FloatRect({0, 0}, resolution));
 }
 
+void CameraManager::Follow(sf::Vector2f position)
+{
+    if (position.y + BOTTOM_PADDING > GetBottomPosition())
+    {
+        Scroll(1);
+    }
+    else if (position.y < GetTopPosition())
+    {
+        Scroll(-1);
+    }    
+    
+    if (position.x > GetRightPosition())
+    {
+        Move({GetMovementSpeed(), 0});
+    }
+    else if (position.x < GetLeftPosition())
+    {
+        Move({-GetMovementSpeed(), 0});
+    }
+}
+
 void CameraManager::Move(sf::Vector2f offset)
 {
     camera.move(offset);

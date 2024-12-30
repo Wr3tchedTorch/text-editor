@@ -37,6 +37,7 @@ public:
     CameraManager(sf::Vector2f resolution, sf::FloatRect limits);
     CameraManager(sf::Vector2f resolution);
 
+    void Follow(sf::Vector2f position);
     void Move(sf::Vector2f direction);
     void Scroll(int direction);
     void Render(sf::RenderWindow &window);

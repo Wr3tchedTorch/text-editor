@@ -1,10 +1,11 @@
-// ?REFACTOR: CameraManager.cpp and App.cpp codes
-// ? continue the creation of the InputManager class using maps and KeyCombinations
-// ? create abstract Command class with an Execute() function for general command execution
+// *ADD: Implement cursor blinking effect using sf::Clock;
 
+// *ADD: Multi selection cursor feature, select multiple cells (letters)
+// * if backspace or enter is pressed, all the selected cells are deleted (this includes lines as well)
+// * if enter is pressed the cells are deleted and a new line is created
+// * a letter is pressed the cells are deleted and the letter is entered at the current cursor pos
 
 // *ADD: Use Text::findCharacterPos() and Text::getCharacterSize() to do text wrap and limit the displayed lines within the visible area of the window;
-// *ADD: Implement cursor blinking effect using sf::Clock;
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -12,7 +13,6 @@
 #include "TextEditor.h"
 #include "CameraManager.h"
 #include "./input/InputManager.h"
-#include "App.h"
 
 const sf::Vector2f WINDOW_RESOLUTION = {1080u, 720u};
 const std::string WINDOW_TITLE = "Eric Code";
@@ -76,7 +76,8 @@ int main()
 
     InputManager inputManager(textEditor, camera);
 
-    App::SetEditorText(text, textEditor, camera);
+    textEditor.SetText(text);
+    camera.SetLimits(sf::FloatRect({0, 0}, {textEditor.GetTextWidth(), textEditor.GetTextHeight()}));
 
     while (window.isOpen())
     {
@@ -96,8 +97,6 @@ int main()
             case sf::Event::KeyPressed:
             {
                 inputManager.ProcessKeyboardInput(event.key.code);
-
-                App::CameraFollow(textEditor.GetCursorPosition(), camera);
                 break;
             }
             case sf::Event::TextEntered:

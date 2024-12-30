@@ -8,27 +8,26 @@ class MoveCursorCommand : public Command
 {
     private:
         TextEditor    &textEditor;
-        CameraManager *camera;
+        CameraManager &camera;
         sf::Vector2i  direction;
         
     public:
         MoveCursorCommand(TextEditor &textEditor, CameraManager &camera, sf::Vector2i direction) 
-            : textEditor(textEditor), camera(&camera), direction(direction)
-        {            
-        }
-
-        MoveCursorCommand(TextEditor &textEditor, sf::Vector2i direction) 
-            : textEditor(textEditor), camera(nullptr), direction(direction)
+            : textEditor(textEditor), camera(camera), direction(direction)
         {            
         }
 
         void Execute() override 
         {
             textEditor.MoveCursor(direction);
-            if (camera)
+            if ((direction.x >  1 || direction.y >  1) ||
+                (direction.x < -1 || direction.y < -1)
+            ) 
             {
-                camera->CenterAtPosition(textEditor.GetCursorPosition());
-            }
+                camera.CenterAtPosition(textEditor.GetCursorPosition());
+                return;
+            }            
+            camera.Follow(textEditor.GetCursorPosition());
         }
 
 };

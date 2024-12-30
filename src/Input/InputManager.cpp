@@ -7,10 +7,10 @@
 InputManager::InputManager(TextEditor &textEditor, CameraManager &cameraManager)
     : textEditor(textEditor), cameraManager(cameraManager)
 {
-    BindKeyToCommand(sf::Keyboard::Key::Right, new MoveCursorCommand(textEditor, { 1,  0 }));
-    BindKeyToCommand(sf::Keyboard::Key::Left,  new MoveCursorCommand(textEditor, {-1,  0 }));
-    BindKeyToCommand(sf::Keyboard::Key::Down,  new MoveCursorCommand(textEditor, { 0,  1 }));
-    BindKeyToCommand(sf::Keyboard::Key::Up,    new MoveCursorCommand(textEditor, { 0, -1 }));
+    BindKeyToCommand(sf::Keyboard::Key::Right, new MoveCursorCommand(textEditor, cameraManager, { 1,  0 }));
+    BindKeyToCommand(sf::Keyboard::Key::Left,  new MoveCursorCommand(textEditor, cameraManager, {-1,  0 }));
+    BindKeyToCommand(sf::Keyboard::Key::Down,  new MoveCursorCommand(textEditor, cameraManager, { 0,  1 }));
+    BindKeyToCommand(sf::Keyboard::Key::Up,    new MoveCursorCommand(textEditor, cameraManager, { 0, -1 }));
     
     BindKeyToCommand(sf::Keyboard::Key::End,  new MoveCursorCommand(textEditor, cameraManager, { 999, 0 }));
     BindKeyToCommand(sf::Keyboard::Key::Home, new MoveCursorCommand(textEditor, cameraManager, {-999, 0 }));
