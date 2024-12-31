@@ -3,6 +3,7 @@
 #include "./commands/MoveCursorCommand.h"
 #include "./commands/DeleteCharacterCommand.h"
 #include "./commands/CreateNewLineCommand.h"
+#include "./commands/SelectCellCommand.h"
 
 InputManager::InputManager(TextEditor &textEditor, CameraManager &cameraManager)
     : textEditor(textEditor), cameraManager(cameraManager)
@@ -83,6 +84,15 @@ void InputManager::ProcessKeyboardInput(sf::Keyboard::Key key)
     }
 
     keyBindings[finalCombination]->Execute();
+}
+
+void InputManager::ProcessMouseInput()
+{
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) 
+    {
+        SelectCellCommand command(textEditor);
+        command.Execute();
+    }
 }
 
 bool InputManager::IsKeyValid(sf::Keyboard::Key key)

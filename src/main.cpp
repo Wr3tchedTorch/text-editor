@@ -1,6 +1,3 @@
-// *ADD: Implement cursor blinking effect using sf::Clock;
-// *Make the cursor opacity slowly fade in and out;
-
 // *ADD: Multi selection cursor feature, select multiple cells (letters)
 // * if backspace or enter is pressed, all the selected cells are deleted (this includes lines as well)
 // * if enter is pressed the cells are deleted and a new line is created
@@ -106,6 +103,9 @@ int main()
             case sf::Event::TextEntered:
                 if (event.text.unicode >= 32 && event.text.unicode <= 126)
                     textEditor.AddCharacterAtCursorPosition(static_cast<char>(event.text.unicode));
+                break;
+            case sf::Event::MouseMoved:
+                inputManager.ProcessMouseInput();
             }
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))

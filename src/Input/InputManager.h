@@ -21,7 +21,9 @@ public:
 
     void BindKeyToCommand(sf::Keyboard::Key, Command *);
     void BindKeyToCommand(KeyCombination, Command *);
+
     void ProcessKeyboardInput(sf::Keyboard::Key);
+    void ProcessMouseInput();
 
 private:
     bool IsKeyValid(sf::Keyboard::Key);

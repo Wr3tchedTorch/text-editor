@@ -1,8 +1,9 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include <SFML/Graphics.hpp>
+#include <set>
 
 class TextEditor
 {
@@ -16,11 +17,13 @@ private:
     std::vector<std::vector<float>> cellCoordinateWidth;
 
     sf::Vector2i currentCursorPosition = {0, 0};
+    std::set<sf::Vector2i> selectedPositions;
+
     sf::RectangleShape cursorHighlightShape;
 
     sf::Font fontFamily;
     float lineHeight;
-    unsigned int charSize = 30;    
+    unsigned int charSize = 30;
 
     float time;
     uint8_t cursorAlpha = 0;
@@ -34,6 +37,7 @@ public:
 
     void AddCharacterAtCursorPosition(char character);
     void CreateNewLineAtCursorPosition();
+    void MarkCurrentCursorPositionAsSelected();
 
     void DeleteCharacterAtCursorPosition();
     void DeleteLineAtCursorPosition();

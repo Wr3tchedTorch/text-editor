@@ -56,6 +56,11 @@ void TextEditor::CreateNewLineAtCursorPosition()
     currentCursorPosition.y++;
 }
 
+void TextEditor::MarkCurrentCursorPositionAsSelected()
+{
+    selectedPositions.insert(currentCursorPosition);
+}
+
 void TextEditor::DeleteCharacterAtCursorPosition()
 {
     if (currentCursorPosition.x == 0)
@@ -227,12 +232,20 @@ void TextEditor::DrawCursor(sf::RenderWindow &window)
     float cursorHeight = charSize + CURSOR_Y_PADDING;
 
     sf::Color cursorColor = cursorHighlightShape.getFillColor();
-    cursorColor.a = cursorAlpha;    
+    cursorColor.a = cursorAlpha;
 
     cursorHighlightShape.setFillColor(cursorColor);
-    cursorHighlightShape.setSize({cursorWidth, cursorHeight});
-    cursorHighlightShape.setPosition(cursorPosition);
+    cursorHighlightShape.setSize({cursorWidth, cursorHeight});    
+    cursorHighlightShape.setPosition(cursorPosition);    
     window.draw(cursorHighlightShape);
+
+    cursorColor.a = 200;
+    for (auto position : selectedPositions) 
+    {
+        cursorHighlightShape.setFillColor(cursorColor);
+        cursorHighlightShape.setPosition(GetPositionFromGridCoordinates(position));
+        window.draw(cursorHighlightShape);
+    }
 }
 
 sf::Vector2f TextEditor::GetPositionFromGridCoordinates(sf::Vector2i coordinates)
