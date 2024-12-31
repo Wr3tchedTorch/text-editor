@@ -8,7 +8,7 @@ TextEditor::TextEditor(std::vector<std::string> text, sf::Font fontFamily, sf::C
     this->fontFamily = fontFamily;
     SetText(text);
 
-    cursorHighlightShape.setFillColor(cursorColor);
+    cursorHighlightShape.setFillColor(cursorColor);    
 }
 
 TextEditor::TextEditor(sf::Color cursorColor, sf::Font fontFamily)
@@ -24,6 +24,13 @@ void TextEditor::Draw(sf::RenderWindow &window, unsigned int fontScale, sf::Colo
     DrawText(window, fontScale, fontColor);
 
     DrawCursor(window);
+}
+
+void TextEditor::Update(float delta)
+{
+    time = fmod(time, 2 * M_PI);
+    cursorAlpha = static_cast<int>(200 * ((std::sin(time) + 1)/2));
+    time += .055f;
 }
 
 void TextEditor::AddCharacterAtCursorPosition(char character)
@@ -219,6 +226,10 @@ void TextEditor::DrawCursor(sf::RenderWindow &window)
     float cursorWidth = GetCharFontWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x));
     float cursorHeight = charSize + CURSOR_Y_PADDING;
 
+    sf::Color cursorColor = cursorHighlightShape.getFillColor();
+    cursorColor.a = cursorAlpha;    
+
+    cursorHighlightShape.setFillColor(cursorColor);
     cursorHighlightShape.setSize({cursorWidth, cursorHeight});
     cursorHighlightShape.setPosition(cursorPosition);
     window.draw(cursorHighlightShape);

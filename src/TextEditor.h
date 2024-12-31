@@ -22,10 +22,15 @@ private:
     float lineHeight;
     unsigned int charSize = 30;    
 
+    float time;
+    uint8_t cursorAlpha = 0;
+
 public:
     TextEditor(std::vector<std::string> text, sf::Font fontFamily, sf::Color cursorColor);
     TextEditor(sf::Color cursorColor, sf::Font fontFamily);
     void Draw(sf::RenderWindow &window, unsigned int charSize, sf::Color fontColor);
+
+    void Update(float delta);
 
     void AddCharacterAtCursorPosition(char character);
     void CreateNewLineAtCursorPosition();

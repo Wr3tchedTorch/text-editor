@@ -1,4 +1,5 @@
 // *ADD: Implement cursor blinking effect using sf::Clock;
+// *Make the cursor opacity slowly fade in and out;
 
 // *ADD: Multi selection cursor feature, select multiple cells (letters)
 // * if backspace or enter is pressed, all the selected cells are deleted (this includes lines as well)
@@ -79,8 +80,11 @@ int main()
     textEditor.SetText(text);
     camera.SetLimits(sf::FloatRect({0, 0}, {textEditor.GetTextWidth(), textEditor.GetTextHeight()}));
 
+    sf::Clock clock;
     while (window.isOpen())
     {
+        float delta = clock.restart().asMilliseconds();
+        
         for (auto event = sf::Event(); window.pollEvent(event);)
         {
             switch (event.type)
@@ -111,15 +115,17 @@ int main()
                 mousePosition.y += camera.GetTopPosition();
                 textEditor.SetCursorPosition(mousePosition);
             }
-
-            window.clear(BG_COLOR);
-
-            camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
-            camera.Render(window);
-
-            textEditor.Draw(window, CHAR_SIZE, FONT_COLOR);
-
-            window.display();
         }
+            
+        textEditor.Update(delta);
+
+        window.clear(BG_COLOR);
+
+        camera.SetLimits(sf::FloatRect(0, 0, 1300, textEditor.GetTextHeight()));
+        camera.Render(window);
+
+        textEditor.Draw(window, CHAR_SIZE, FONT_COLOR);
+
+        window.display();
     }
 }
