@@ -3,7 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include <set>
+#include <unordered_set>
+#include "Vector2Hash.h"
 
 class TextEditor
 {
@@ -17,7 +18,7 @@ private:
     std::vector<std::vector<float>> cellCoordinateWidth;
 
     sf::Vector2i currentCursorPosition = {0, 0};
-    std::set<sf::Vector2i> selectedPositions;
+    std::unordered_set<sf::Vector2i, Vector2iHash, Vector2iEqual> selectedPositions;
 
     sf::RectangleShape cursorHighlightShape;
 

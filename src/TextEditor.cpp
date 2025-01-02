@@ -79,7 +79,7 @@ void TextEditor::DeleteLineAtCursorPosition()
     if (currentCursorPosition.y == 0)
         return;
 
-    sf::Vector2i newCursorPosition = {text.at(currentCursorPosition.y - 1).size(), currentCursorPosition.y - 1};
+    sf::Vector2i newCursorPosition = {static_cast<int>(text.at(currentCursorPosition.y - 1).size()), currentCursorPosition.y - 1};
     std::string currentLineContent = text.at(currentCursorPosition.y);
 
     text.at(newCursorPosition.y) += currentLineContent;
@@ -235,13 +235,16 @@ void TextEditor::DrawCursor(sf::RenderWindow &window)
     cursorColor.a = cursorAlpha;
 
     cursorHighlightShape.setFillColor(cursorColor);
-    cursorHighlightShape.setSize({cursorWidth, cursorHeight});    
+    cursorHighlightShape.setSize({cursorWidth, cursorHeight});
     cursorHighlightShape.setPosition(cursorPosition);    
     window.draw(cursorHighlightShape);
 
     cursorColor.a = 200;
     for (auto position : selectedPositions) 
     {
+        float cellWidth = GetCharFontWidth(text.at(currentCursorPosition.y).at(currentCursorPosition.x));
+        float cellHeight = charSize + CURSOR_Y_PADDING;
+        cursorHighlightShape.setSize({cellWidth, cellHeight});
         cursorHighlightShape.setFillColor(cursorColor);
         cursorHighlightShape.setPosition(GetPositionFromGridCoordinates(position));
         window.draw(cursorHighlightShape);
