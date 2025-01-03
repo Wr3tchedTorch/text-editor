@@ -19,6 +19,7 @@ private:
 
     sf::Vector2i currentCursorPosition = {0, 0};
     std::unordered_set<sf::Vector2i, Vector2iHash, Vector2iEqual> selectedPositions;
+    sf::Vector2i startingPosition = {-1, -1};
 
     sf::RectangleShape cursorHighlightShape;
 
@@ -38,7 +39,8 @@ public:
 
     void AddCharacterAtCursorPosition(char character);
     void CreateNewLineAtCursorPosition();
-    void MarkCurrentCursorPositionAsSelected();
+    void MarkSelectedCells();
+    void UnmarkLineCellsAsSelected(int line);
 
     void DeleteCharacterAtCursorPosition();
     void DeleteLineAtCursorPosition();

@@ -1,3 +1,5 @@
+// !FIX Multi selection line not being deleted when cursor moves up;
+
 // *ADD: Multi selection cursor feature, select multiple cells (letters)
 // * if backspace or enter is pressed, all the selected cells are deleted (this includes lines as well)
 // * if enter is pressed the cells are deleted and a new line is created

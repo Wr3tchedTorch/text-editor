@@ -13,6 +13,6 @@ class SelectCellCommand : public Command
 
         void Execute() override 
         {
-            textEditor.MarkCurrentCursorPositionAsSelected();
+            textEditor.MarkSelectedCells();
         }
 };

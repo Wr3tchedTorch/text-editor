@@ -56,9 +56,70 @@ void TextEditor::CreateNewLineAtCursorPosition()
     currentCursorPosition.y++;
 }
 
-void TextEditor::MarkCurrentCursorPositionAsSelected()
+void TextEditor::MarkSelectedCells()
 {
-    selectedPositions.insert(currentCursorPosition);
+    if (startingPosition.x == -1 &&
+        startingPosition.y == -1) 
+    {
+        startingPosition = currentCursorPosition;
+    }
+
+    int x = startingPosition.x, y = startingPosition.y;
+    while (!(x == currentCursorPosition.x &&
+             y == currentCursorPosition.y))
+    {
+        selectedPositions.insert({x, y});
+
+        if (currentCursorPosition.y > y &&
+            y + 1 < GetTextHeight()) 
+        {
+            if (startingPosition.y > y) 
+            {
+                std::cout << "\nGoing Down: removing cells as selected" << std::endl;
+                UnmarkLineCellsAsSelected(y);
+            }
+            y++;
+            x = 0;
+        }
+        else if (currentCursorPosition.y < y &&
+                 y - 1 > 0)
+        {
+            if (startingPosition.y < y) 
+            {
+                std::cout << "\nGoing Up: removing cells as selected" << std::endl;
+                UnmarkLineCellsAsSelected(y);
+            }
+            y--;
+            x = 0;
+        }
+
+        if (currentCursorPosition.x > x &&
+            x + 1 < GetLineSize(y)) 
+        {
+            x++;
+            selectedPositions.erase({x, y});
+        }
+        else if (currentCursorPosition.x < x &&
+                 x - 1 > 0)
+        {
+            x--;
+            selectedPositions.erase({x, y});
+        }
+    }
+}
+
+void TextEditor::UnmarkLineCellsAsSelected(int line)
+{
+    if (line < 0 ||
+        line > GetTextHeight()) 
+    {
+        return;
+    }
+
+    for (size_t x = 0; x < GetLineSize(line); x++)
+    {
+        selectedPositions.erase({x, line});
+    }
 }
 
 void TextEditor::DeleteCharacterAtCursorPosition()
